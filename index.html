@@ -1,0 +1,1925 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TechExactly — Medical Device Software Development</title>
+<style>
+/* ═══════════════════════════════════════
+   CSS VARIABLES & RESET
+═══════════════════════════════════════ */
+:root {
+  --red: #EF3C39;
+  --red-light: #ff6b68;
+  --red-glow: rgba(239,60,57,0.25);
+  --navy: #023047;
+  --navy-deep: #011f30;
+  --diamond: #B4E9FF;
+  --white: #FFFFFF;
+  --off: #F5F7FA;
+  --ink: #080C12;
+  --text: #111827;
+  --mid: #374151;
+  --soft: #6B7280;
+  --border: rgba(0,0,0,0.075);
+  --shadow-sm: 0 2px 8px rgba(0,0,0,0.06);
+  --shadow-md: 0 4px 20px rgba(0,0,0,0.10);
+  --shadow-lg: 0 8px 40px rgba(0,0,0,0.14);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; color: var(--text); background: var(--white); overflow-x: hidden; }
+a { text-decoration: none; color: inherit; }
+img { display: block; max-width: 100%; }
+
+/* ═══════════════════════════════════════
+   TYPOGRAPHY GLOBALS
+═══════════════════════════════════════ */
+.eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--red);
+  margin-bottom: 16px;
+}
+.eyebrow::before {
+  content: '';
+  display: block;
+  width: 16px;
+  height: 2px;
+  background: var(--red);
+  flex-shrink: 0;
+}
+.sh {
+  font-size: clamp(28px, 3.2vw, 44px);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.15;
+  color: var(--text);
+}
+.body-text {
+  font-size: 16.5px;
+  line-height: 1.75;
+  color: var(--soft);
+}
+
+/* ═══════════════════════════════════════
+   LAYOUT
+═══════════════════════════════════════ */
+.container {
+  max-width: 1220px;
+  margin: 0 auto;
+  padding: 0 48px;
+}
+
+/* ═══════════════════════════════════════
+   SCROLL REVEAL
+═══════════════════════════════════════ */
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ═══════════════════════════════════════
+   SECTION 1 — FIXED NAV
+═══════════════════════════════════════ */
+#nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: 66px;
+  z-index: 1000;
+  transition: background 0.3s, border-color 0.3s, backdrop-filter 0.3s;
+  border-bottom: 1px solid transparent;
+}
+#nav.scrolled {
+  background: rgba(255,255,255,0.96);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom-color: var(--border);
+}
+.nav-inner {
+  max-width: 1220px;
+  margin: 0 auto;
+  padding: 0 48px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.wordmark {
+  font-size: 19px;
+  font-weight: 800;
+  color: var(--white);
+  transition: color 0.3s;
+  letter-spacing: -0.02em;
+}
+#nav.scrolled .wordmark { color: var(--ink); }
+.wordmark span { color: var(--red); }
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 36px;
+  list-style: none;
+}
+.nav-links a {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: rgba(255,255,255,0.7);
+  transition: color 0.2s;
+}
+#nav.scrolled .nav-links a { color: var(--mid); }
+.nav-links a:hover, #nav.scrolled .nav-links a:hover { color: var(--red); }
+.nav-cta {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  background: var(--red);
+  color: var(--white);
+  font-size: 13.5px;
+  font-weight: 600;
+  padding: 10px 22px;
+  border-radius: 100px;
+  box-shadow: 0 4px 16px var(--red-glow);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.nav-cta:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 24px rgba(239,60,57,0.35);
+}
+.nav-cta svg { flex-shrink: 0; }
+
+/* ═══════════════════════════════════════
+   SECTION 2 — HERO
+═══════════════════════════════════════ */
+#hero {
+  min-height: 100vh;
+  background: var(--ink);
+  padding-top: 66px;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+}
+
+/* Dot grid */
+.hero-grid-bg {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(180,233,255,.028) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(180,233,255,.028) 1px, transparent 1px);
+  background-size: 68px 68px;
+  z-index: 0;
+}
+
+/* Orbs */
+.orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(70px);
+  z-index: 0;
+  pointer-events: none;
+}
+.orb-1 {
+  width: 720px; height: 720px;
+  background: radial-gradient(circle, rgba(2,48,71,0.9) 0%, transparent 70%);
+  top: -180px; right: -180px;
+  animation: orbFloat1 20s ease-in-out alternate infinite;
+}
+.orb-2 {
+  width: 480px; height: 480px;
+  background: radial-gradient(circle, rgba(239,60,57,0.12) 0%, transparent 70%);
+  bottom: -120px; left: -80px;
+  animation: orbFloat2 16s ease-in-out alternate infinite;
+}
+.orb-3 {
+  width: 360px; height: 360px;
+  background: radial-gradient(circle, rgba(180,233,255,0.07) 0%, transparent 70%);
+  top: 40%; right: 25%;
+  animation: orbFloat3 24s ease-in-out alternate infinite;
+}
+
+@keyframes orbFloat1 { to { transform: translate(50px, 70px) scale(1.08); } }
+@keyframes orbFloat2 { to { transform: translate(40px, -60px) scale(1.05); } }
+@keyframes orbFloat3 { to { transform: translate(-30px, 50px) scale(1.1); } }
+
+.hero-content {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 72px;
+  align-items: center;
+  padding: 96px 48px;
+  max-width: 1220px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+/* Hero left */
+.hero-left > * {
+  opacity: 0;
+  transform: translateY(18px);
+  animation: heroIn 0.7s ease forwards;
+}
+.hero-left > *:nth-child(1) { animation-delay: 0.1s; }
+.hero-left > *:nth-child(2) { animation-delay: 0.2s; }
+.hero-left > *:nth-child(3) { animation-delay: 0.3s; }
+.hero-left > *:nth-child(4) { animation-delay: 0.4s; }
+.hero-left > *:nth-child(5) { animation-delay: 0.5s; }
+
+@keyframes heroIn {
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.hero-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(180,233,255,0.07);
+  border: 1px solid rgba(180,233,255,0.18);
+  border-radius: 100px;
+  padding: 7px 14px 7px 10px;
+  color: var(--diamond);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  width: fit-content;
+}
+.pulse-dot {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: var(--diamond);
+  animation: pulse 2s ease infinite;
+}
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(0.7); }
+}
+
+.hero-h1 {
+  font-size: clamp(40px, 5vw, 62px);
+  font-weight: 800;
+  letter-spacing: -0.035em;
+  line-height: 1.1;
+  color: var(--white);
+  margin-top: 20px;
+}
+.hero-h1 .diamond { color: var(--diamond); }
+.hero-h1 .red { color: var(--red); }
+
+.hero-sub {
+  font-size: 16.5px;
+  line-height: 1.75;
+  color: rgba(255,255,255,0.5);
+  max-width: 450px;
+  margin-top: 20px;
+}
+
+.hero-btns {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin-top: 32px;
+}
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--red);
+  color: var(--white);
+  font-size: 15px;
+  font-weight: 600;
+  padding: 15px 30px;
+  border-radius: 100px;
+  box-shadow: 0 6px 24px var(--red-glow);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 32px rgba(239,60,57,0.38);
+}
+.btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: transparent;
+  color: rgba(255,255,255,0.6);
+  font-size: 15px;
+  font-weight: 600;
+  padding: 15px 30px;
+  border-radius: 100px;
+  border: 1px solid rgba(255,255,255,0.18);
+  transition: color 0.2s, border-color 0.2s;
+}
+.btn-ghost:hover {
+  color: var(--white);
+  border-color: rgba(255,255,255,0.45);
+}
+
+.trust-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 18px;
+  margin-top: 28px;
+}
+.trust-item {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 12.5px;
+  color: rgba(255,255,255,0.35);
+}
+.trust-check {
+  width: 18px; height: 18px;
+  border-radius: 50%;
+  background: rgba(180,233,255,0.1);
+  border: 1px solid rgba(180,233,255,0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.trust-check svg { width: 10px; height: 10px; }
+
+/* Hero right — compliance cards */
+.hero-right {
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+  opacity: 0;
+  transform: translateY(18px);
+  animation: heroIn 0.7s ease 0.4s forwards;
+}
+.comp-card {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 16px;
+  padding: 20px 22px;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  cursor: default;
+  transition: background 0.25s, border-color 0.25s, transform 0.25s;
+  position: relative;
+  overflow: hidden;
+}
+.comp-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--diamond), transparent);
+  opacity: 0;
+  transition: opacity 0.25s;
+}
+.comp-card:hover {
+  background: rgba(255,255,255,0.07);
+  border-color: rgba(180,233,255,0.2);
+  transform: translateX(-5px);
+}
+.comp-card:hover::before { opacity: 1; }
+.comp-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+.comp-card-name {
+  font-size: 14.5px;
+  font-weight: 700;
+  color: var(--white);
+}
+.status-pill {
+  font-size: 10.5px;
+  font-weight: 700;
+  padding: 3px 9px;
+  border-radius: 100px;
+  letter-spacing: 0.06em;
+}
+.pill-blue { background: rgba(59,130,246,0.2); color: #93c5fd; }
+.pill-red { background: rgba(239,60,57,0.2); color: #fca5a5; }
+.pill-green { background: rgba(34,197,94,0.2); color: #86efac; }
+.pill-yellow { background: rgba(234,179,8,0.2); color: #fde047; }
+.comp-card-desc {
+  font-size: 12.5px;
+  color: rgba(255,255,255,0.38);
+  line-height: 1.55;
+}
+
+/* ═══════════════════════════════════════
+   SECTION 3 — STATS BAR
+═══════════════════════════════════════ */
+#stats {
+  background: var(--white);
+  border-bottom: 1px solid var(--border);
+}
+.stats-grid {
+  max-width: 1220px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+}
+.stat-cell {
+  padding: 34px 44px;
+  border-right: 1px solid var(--border);
+  position: relative;
+  overflow: hidden;
+  transition: background 0.2s;
+  cursor: default;
+}
+.stat-cell:last-child { border-right: none; }
+.stat-cell::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0;
+  width: 100%; height: 2px;
+  background: var(--red);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.3s ease;
+}
+.stat-cell:hover { background: var(--off); }
+.stat-cell:hover::after { transform: scaleX(1); }
+.stat-num {
+  font-size: 42px;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  color: var(--navy);
+  line-height: 1;
+}
+.stat-num .suf { color: var(--red); }
+.stat-label {
+  font-size: 12.5px;
+  color: var(--soft);
+  margin-top: 6px;
+  font-weight: 500;
+}
+
+/* ═══════════════════════════════════════
+   SECTION 4 — WHY TECH EXACTLY
+═══════════════════════════════════════ */
+#why {
+  background: var(--off);
+  padding: 100px 0;
+  overflow: hidden;
+  position: relative;
+}
+.why-blob {
+  position: absolute;
+  top: -100px; right: -100px;
+  width: 560px; height: 560px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(180,233,255,0.3) 0%, transparent 70%);
+  pointer-events: none;
+}
+.why-grid {
+  display: grid;
+  grid-template-columns: 380px 1fr;
+  gap: 80px;
+  align-items: start;
+}
+.why-left {
+  position: sticky;
+  top: 96px;
+}
+.why-left .sh { margin-bottom: 16px; }
+.why-left .sh .red { color: var(--red); }
+.why-left .body-text { margin-bottom: 28px; }
+.why-info-card {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 18px 20px;
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  box-shadow: var(--shadow-sm);
+}
+.why-icon-box {
+  width: 34px; height: 34px;
+  border-radius: 9px;
+  background: var(--navy);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.why-icon-box svg { width: 18px; height: 18px; }
+.why-card-text strong {
+  display: block;
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 4px;
+}
+.why-card-text span {
+  font-size: 13px;
+  color: var(--soft);
+  line-height: 1.6;
+}
+
+.why-reasons { display: flex; flex-direction: column; }
+.reason-row {
+  display: grid;
+  grid-template-columns: 50px 1fr;
+  gap: 18px;
+  padding: 30px 0;
+  border-bottom: 1px solid var(--border);
+  align-items: start;
+  transition: transform 0.25s ease, padding-left 0.25s ease;
+  cursor: default;
+}
+.reason-row:hover {
+  transform: translateX(8px);
+}
+.reason-num {
+  width: 42px; height: 42px;
+  border-radius: 10px;
+  background: var(--white);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12.5px;
+  font-weight: 800;
+  color: var(--text);
+  transition: background 0.2s, color 0.2s;
+  flex-shrink: 0;
+}
+.reason-row:hover .reason-num {
+  background: var(--red);
+  color: var(--white);
+  border-color: var(--red);
+}
+.reason-title {
+  font-size: 15.5px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 6px;
+}
+.reason-desc {
+  font-size: 14px;
+  color: var(--soft);
+  line-height: 1.65;
+}
+
+/* ═══════════════════════════════════════
+   SECTION 5 — SERVICES
+═══════════════════════════════════════ */
+#services {
+  background: var(--white);
+  padding: 100px 0;
+}
+#services .sh { color: var(--text); }
+.section-header {
+  margin-bottom: 56px;
+}
+.services-outer {
+  border-radius: 32px;
+  overflow: hidden;
+  background: var(--border);
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1px;
+}
+.service-card {
+  background: var(--white);
+  padding: 34px 26px;
+  transition: background 0.2s;
+  position: relative;
+  overflow: hidden;
+  cursor: default;
+}
+.service-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 3px;
+  background: linear-gradient(90deg, var(--red), var(--red-light));
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.3s ease;
+}
+.service-card:hover { background: #fafbfc; }
+.service-card:hover::before { transform: scaleX(1); }
+.service-icon {
+  width: 42px; height: 42px;
+  background: var(--off);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 16px;
+  transition: background 0.2s;
+}
+.service-icon svg { width: 20px; height: 20px; color: var(--navy); transition: color 0.2s; }
+.service-card:hover .service-icon { background: var(--navy); }
+.service-card:hover .service-icon svg { color: var(--diamond); }
+.service-title {
+  font-size: 14.5px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 8px;
+}
+.service-desc {
+  font-size: 13px;
+  color: var(--soft);
+  line-height: 1.6;
+}
+
+/* ═══════════════════════════════════════
+   SECTION 6 — PROVEN RESULTS
+═══════════════════════════════════════ */
+#results {
+  background: var(--navy);
+  padding: 80px 0;
+  overflow: hidden;
+  position: relative;
+}
+.results-dot-grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(180,233,255,.022) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(180,233,255,.022) 1px, transparent 1px);
+  background-size: 60px 60px;
+  pointer-events: none;
+}
+.results-glow {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 800px; height: 400px;
+  background: radial-gradient(ellipse, rgba(180,233,255,0.06) 0%, transparent 70%);
+  pointer-events: none;
+}
+.results-container {
+  border-radius: 32px;
+  overflow: hidden;
+  background: rgba(255,255,255,0.07);
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1px;
+  position: relative;
+  z-index: 1;
+}
+.result-cell {
+  background: rgba(2,48,71,0.5);
+  padding: 44px 36px;
+  backdrop-filter: blur(6px);
+  position: relative;
+  overflow: hidden;
+  cursor: default;
+  transition: background 0.25s;
+}
+.result-cell::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 60%; height: 2px;
+  background: linear-gradient(90deg, var(--red), transparent);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.result-cell:hover { background: rgba(1,31,48,0.8); }
+.result-cell:hover::before { opacity: 1; }
+.result-num {
+  font-size: 52px;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  color: var(--white);
+  line-height: 1;
+  margin-bottom: 10px;
+}
+.result-num .rsuf { color: var(--diamond); }
+.result-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: rgba(255,255,255,0.45);
+}
+
+/* ═══════════════════════════════════════
+   SECTION 7 — TECH STACK
+═══════════════════════════════════════ */
+#stack {
+  background: var(--ink);
+  padding: 100px 0;
+  overflow: hidden;
+  position: relative;
+}
+.stack-dot-grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(180,233,255,.022) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(180,233,255,.022) 1px, transparent 1px);
+  background-size: 60px 60px;
+  pointer-events: none;
+}
+.stack-glow {
+  position: absolute;
+  top: 0; left: 50%;
+  transform: translateX(-50%);
+  width: 860px; height: 560px;
+  background: radial-gradient(ellipse, rgba(180,233,255,0.055) 0%, transparent 70%);
+  pointer-events: none;
+}
+#stack .eyebrow, #stack .sh { color: var(--white); }
+#stack .sh { color: rgba(255,255,255,0.95); }
+.stack-outer {
+  border-radius: 32px;
+  overflow: hidden;
+  background: rgba(255,255,255,0.05);
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 1px;
+  position: relative;
+  z-index: 1;
+  margin-top: 56px;
+}
+.stack-cell {
+  background: rgba(8,12,18,0.7);
+  padding: 28px 24px;
+  backdrop-filter: blur(6px);
+  cursor: default;
+  transition: background 0.25s;
+}
+.stack-cell:hover { background: rgba(2,48,71,0.8); }
+.stack-cat {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: rgba(180,233,255,0.45);
+  margin-bottom: 8px;
+  transition: color 0.2s;
+}
+.stack-cell:hover .stack-cat { color: var(--diamond); }
+.stack-name {
+  font-size: 14.5px;
+  font-weight: 700;
+  color: var(--white);
+  margin-bottom: 6px;
+}
+.stack-vals {
+  font-size: 12.5px;
+  color: rgba(255,255,255,0.35);
+  line-height: 1.55;
+}
+
+/* ═══════════════════════════════════════
+   SECTION 8 — PROCESS
+═══════════════════════════════════════ */
+#process {
+  background: var(--white);
+  padding: 100px 0;
+}
+.process-steps { margin-top: 56px; }
+.process-step {
+  display: grid;
+  grid-template-columns: 96px 1fr;
+  gap: 36px;
+  padding: 44px 0 44px 0;
+  border-bottom: 1px solid var(--border);
+  align-items: start;
+  position: relative;
+  cursor: default;
+  transition: padding-left 0.3s ease;
+}
+.process-step::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 3px;
+  background: linear-gradient(180deg, var(--red), var(--red-light));
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.process-step:hover { padding-left: 18px; }
+.process-step:hover::before { opacity: 1; }
+.step-left { text-align: center; }
+.step-num {
+  font-size: 54px;
+  font-weight: 800;
+  color: rgba(0,0,0,0.06);
+  line-height: 1;
+  margin-bottom: 8px;
+  transition: color 0.3s;
+}
+.process-step:hover .step-num { color: rgba(239,60,57,0.12); }
+.iec-tag {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--red);
+}
+.step-title {
+  font-size: 19px;
+  font-weight: 800;
+  color: var(--text);
+  margin-bottom: 10px;
+}
+.step-desc {
+  font-size: 14.5px;
+  color: var(--soft);
+  line-height: 1.7;
+  margin-bottom: 14px;
+}
+.deliverable-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+.dpill {
+  font-size: 11.5px;
+  font-weight: 600;
+  padding: 4px 11px;
+  border-radius: 100px;
+  background: var(--off);
+  color: var(--mid);
+  border: 1px solid var(--border);
+  transition: background 0.2s, color 0.2s, border-color 0.2s;
+}
+.process-step:hover .dpill {
+  background: rgba(239,60,57,0.07);
+  color: var(--red);
+  border-color: rgba(239,60,57,0.2);
+}
+
+/* ═══════════════════════════════════════
+   SECTION 9 — DELIVERABLES
+═══════════════════════════════════════ */
+#deliverables {
+  background: var(--off);
+  padding: 100px 0;
+  overflow: hidden;
+  position: relative;
+}
+.deliv-blob {
+  position: absolute;
+  bottom: -140px; left: -120px;
+  width: 500px; height: 500px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(239,60,57,0.07) 0%, transparent 70%);
+  pointer-events: none;
+}
+.deliv-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  margin-top: 56px;
+}
+.deliv-card {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 28px 26px;
+  box-shadow: var(--shadow-sm);
+  transition: box-shadow 0.25s, transform 0.25s, border-color 0.25s;
+  cursor: default;
+  position: relative;
+  overflow: hidden;
+}
+.deliv-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 3px;
+  background: linear-gradient(90deg, var(--red), transparent);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.deliv-card:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-3px);
+  border-color: rgba(239,60,57,0.15);
+}
+.deliv-card:hover::before { opacity: 1; }
+.deliv-icon {
+  width: 44px; height: 44px;
+  background: var(--off);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 16px;
+  transition: background 0.2s;
+}
+.deliv-icon svg { width: 22px; height: 22px; color: var(--navy); }
+.deliv-card:hover .deliv-icon { background: rgba(2,48,71,0.08); }
+.deliv-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 10px;
+}
+.deliv-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.deliv-list li {
+  font-size: 13px;
+  color: var(--soft);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.deliv-list li::before {
+  content: '';
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: var(--red);
+  flex-shrink: 0;
+}
+
+/* ═══════════════════════════════════════
+   SECTION 10 — FAQ
+═══════════════════════════════════════ */
+#faq {
+  background: var(--white);
+  padding: 100px 0;
+}
+.faq-grid {
+  display: grid;
+  grid-template-columns: 380px 1fr;
+  gap: 80px;
+  align-items: start;
+  margin-top: 0;
+}
+.faq-left {
+  position: sticky;
+  top: 96px;
+}
+.faq-left .sh { margin-bottom: 16px; }
+.faq-left .body-text { margin-bottom: 28px; }
+.faq-cta-card {
+  background: var(--navy);
+  border-radius: 16px;
+  padding: 28px 24px;
+  color: var(--white);
+}
+.faq-cta-card h4 {
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  color: var(--white);
+}
+.faq-cta-card p {
+  font-size: 13.5px;
+  color: rgba(255,255,255,0.5);
+  margin-bottom: 18px;
+  line-height: 1.6;
+}
+.faq-cta-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  background: var(--red);
+  color: var(--white);
+  font-size: 13.5px;
+  font-weight: 600;
+  padding: 11px 22px;
+  border-radius: 100px;
+  transition: box-shadow 0.2s, transform 0.2s;
+}
+.faq-cta-btn:hover {
+  box-shadow: 0 6px 20px var(--red-glow);
+  transform: translateY(-1px);
+}
+
+.faq-items { display: flex; flex-direction: column; }
+.faq-item {
+  border-bottom: 1px solid var(--border);
+}
+.faq-q {
+  width: 100%;
+  background: none;
+  border: none;
+  padding: 24px 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  cursor: pointer;
+  text-align: left;
+}
+.faq-q-text {
+  font-size: 15.5px;
+  font-weight: 700;
+  color: var(--text);
+  transition: color 0.2s;
+}
+.faq-q:hover .faq-q-text { color: var(--red); }
+.faq-icon {
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: background 0.2s, border-color 0.2s, transform 0.3s;
+}
+.faq-item.open .faq-icon {
+  background: var(--red);
+  border-color: var(--red);
+  transform: rotate(45deg);
+}
+.faq-icon svg { width: 12px; height: 12px; color: var(--soft); }
+.faq-item.open .faq-icon svg { color: var(--white); }
+.faq-a {
+  display: none;
+  padding-bottom: 22px;
+  font-size: 14.5px;
+  color: var(--soft);
+  line-height: 1.75;
+}
+.faq-item.open .faq-a { display: block; }
+
+/* ═══════════════════════════════════════
+   SECTION 11 — CTA BAND
+═══════════════════════════════════════ */
+#cta-band {
+  background: var(--ink);
+  padding: 100px 0;
+  position: relative;
+  overflow: hidden;
+  text-align: center;
+}
+.cta-band-bg {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(180,233,255,.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(180,233,255,.025) 1px, transparent 1px);
+  background-size: 68px 68px;
+}
+.cta-orb {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 600px; height: 300px;
+  border-radius: 50%;
+  background: radial-gradient(ellipse, rgba(239,60,57,0.1) 0%, transparent 70%);
+  pointer-events: none;
+}
+.cta-band-inner {
+  position: relative;
+  z-index: 1;
+}
+.cta-band-inner .eyebrow { justify-content: center; }
+.cta-band-inner .sh {
+  color: var(--white);
+  margin-bottom: 16px;
+}
+.cta-band-inner .body-text {
+  color: rgba(255,255,255,0.45);
+  max-width: 520px;
+  margin: 0 auto 36px;
+}
+.cta-band-btns {
+  display: flex;
+  gap: 14px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+/* ═══════════════════════════════════════
+   FOOTER
+═══════════════════════════════════════ */
+footer {
+  background: var(--navy-deep);
+  padding: 60px 0 32px;
+  color: rgba(255,255,255,0.4);
+}
+.footer-inner {
+  display: grid;
+  grid-template-columns: 1.6fr 1fr 1fr 1fr;
+  gap: 48px;
+  margin-bottom: 48px;
+}
+.footer-brand .wordmark { color: var(--white); font-size: 18px; }
+.footer-brand p {
+  font-size: 13.5px;
+  color: rgba(255,255,255,0.35);
+  margin-top: 12px;
+  line-height: 1.65;
+  max-width: 240px;
+}
+.footer-col h5 {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: rgba(255,255,255,0.3);
+  margin-bottom: 16px;
+}
+.footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+.footer-col ul a {
+  font-size: 13.5px;
+  color: rgba(255,255,255,0.5);
+  transition: color 0.2s;
+}
+.footer-col ul a:hover { color: var(--white); }
+.footer-bottom {
+  border-top: 1px solid rgba(255,255,255,0.07);
+  padding-top: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 12.5px;
+}
+.footer-bottom a { color: rgba(255,255,255,0.4); transition: color 0.2s; }
+.footer-bottom a:hover { color: var(--white); }
+
+/* ═══════════════════════════════════════
+   RESPONSIVE
+═══════════════════════════════════════ */
+@media (max-width: 1100px) {
+  .hero-content { grid-template-columns: 1fr; gap: 48px; }
+  .hero-right { display: grid; grid-template-columns: repeat(2, 1fr); }
+  .why-grid { grid-template-columns: 1fr; }
+  .why-left { position: static; }
+  .services-outer { grid-template-columns: repeat(2, 1fr); }
+  .stats-grid { grid-template-columns: repeat(2, 1fr); }
+  .stat-cell:nth-child(2) { border-right: none; }
+  .results-container { grid-template-columns: repeat(2, 1fr); }
+  .stack-outer { grid-template-columns: repeat(3, 1fr); }
+  .faq-grid { grid-template-columns: 1fr; }
+  .faq-left { position: static; }
+  .footer-inner { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 680px) {
+  .container { padding: 0 20px; }
+  .nav-inner { padding: 0 20px; }
+  .nav-links { display: none; }
+  .hero-content { padding: 60px 20px; }
+  .hero-right { grid-template-columns: 1fr; }
+  .stats-grid { grid-template-columns: 1fr; }
+  .stat-cell { border-right: none; border-bottom: 1px solid var(--border); }
+  .services-outer { grid-template-columns: 1fr; border-radius: 16px; }
+  .results-container { grid-template-columns: 1fr; border-radius: 16px; }
+  .stack-outer { grid-template-columns: repeat(2, 1fr); border-radius: 16px; }
+  .deliv-grid { grid-template-columns: 1fr; }
+  .process-step { grid-template-columns: 60px 1fr; }
+  .footer-inner { grid-template-columns: 1fr; }
+  .footer-bottom { flex-direction: column; gap: 12px; text-align: center; }
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════ NAV ═══════════════════ -->
+<nav id="nav">
+  <div class="nav-inner">
+    <a href="#" class="wordmark">Tech<span>Exactly</span></a>
+    <ul class="nav-links">
+      <li><a href="#services">Services</a></li>
+      <li><a href="#process">Process</a></li>
+      <li><a href="#deliverables">Deliverables</a></li>
+      <li><a href="#faq">FAQ</a></li>
+    </ul>
+    <a href="#cta-band" class="nav-cta">
+      Schedule a Call
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2.5 7h9M8 4l3.5 3L8 10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </a>
+  </div>
+</nav>
+
+<!-- ═══════════════════ HERO ═══════════════════ -->
+<section id="hero">
+  <div class="hero-grid-bg"></div>
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+  <div class="hero-content">
+    <div class="hero-left">
+      <div class="hero-tag">
+        <span class="pulse-dot"></span>
+        IEC 62304 · ISO 14971 · FDA 510(k)
+      </div>
+      <h1 class="hero-h1">
+        Code that can<br>
+        <span class="diamond">survive</span> any<br>
+        regulatory <span class="red">scrutiny</span>
+      </h1>
+      <p class="hero-sub">We build medical device software end-to-end — from architecture to submission-ready documentation — so your team ships faster without compliance risk.</p>
+      <div class="hero-btns">
+        <a href="#cta-band" class="btn-primary">
+          Schedule a Call
+          <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M3 7.5h9M9 4.5l3 3-3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+        <a href="#process" class="btn-ghost">See our process</a>
+      </div>
+      <div class="trust-badges">
+        <div class="trust-item">
+          <div class="trust-check">
+            <svg viewBox="0 0 10 10" fill="none"><path d="M2 5l2.2 2.2L8 3" stroke="#B4E9FF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          NDA on first call
+        </div>
+        <div class="trust-item">
+          <div class="trust-check">
+            <svg viewBox="0 0 10 10" fill="none"><path d="M2 5l2.2 2.2L8 3" stroke="#B4E9FF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          Full IP ownership
+        </div>
+        <div class="trust-item">
+          <div class="trust-check">
+            <svg viewBox="0 0 10 10" fill="none"><path d="M2 5l2.2 2.2L8 3" stroke="#B4E9FF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          ISO 13485 QMS
+        </div>
+        <div class="trust-item">
+          <div class="trust-check">
+            <svg viewBox="0 0 10 10" fill="none"><path d="M2 5l2.2 2.2L8 3" stroke="#B4E9FF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          Bilingual teams
+        </div>
+      </div>
+    </div>
+    <div class="hero-right">
+      <div class="comp-card">
+        <div class="comp-card-top">
+          <span class="comp-card-name">IEC 62304</span>
+          <span class="status-pill pill-blue">Lifecycle</span>
+        </div>
+        <div class="comp-card-desc">Software lifecycle process standard for medical device software — from planning through maintenance.</div>
+      </div>
+      <div class="comp-card">
+        <div class="comp-card-top">
+          <span class="comp-card-name">ISO 14971</span>
+          <span class="status-pill pill-red">Risk Mgmt</span>
+        </div>
+        <div class="comp-card-desc">Application of risk management to medical devices — hazard identification, analysis, and control.</div>
+      </div>
+      <div class="comp-card">
+        <div class="comp-card-top">
+          <span class="comp-card-name">FDA 510(k)</span>
+          <span class="status-pill pill-green">US Market</span>
+        </div>
+        <div class="comp-card-desc">Premarket notification pathway for FDA clearance — we prepare and support full submissions.</div>
+      </div>
+      <div class="comp-card">
+        <div class="comp-card-top">
+          <span class="comp-card-name">ISO 13485</span>
+          <span class="status-pill pill-yellow">Quality</span>
+        </div>
+        <div class="comp-card-desc">Quality management systems for medical device design and development organizations.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ STATS ═══════════════════ -->
+<section id="stats">
+  <div class="stats-grid">
+    <div class="stat-cell reveal">
+      <div class="stat-num">6<span class="suf">+</span></div>
+      <div class="stat-label">Years in medical device software</div>
+    </div>
+    <div class="stat-cell reveal">
+      <div class="stat-num">Class <span class="suf">B&C</span></div>
+      <div class="stat-label">IEC 62304 software experience</div>
+    </div>
+    <div class="stat-cell reveal">
+      <div class="stat-num">FDA <span class="suf">&</span> CE</div>
+      <div class="stat-label">Regulatory submission support</div>
+    </div>
+    <div class="stat-cell reveal">
+      <div class="stat-num">ISO <span class="suf">✓</span></div>
+      <div class="stat-label">13485-aligned quality system</div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ WHY ═══════════════════ -->
+<section id="why">
+  <div class="why-blob"></div>
+  <div class="container">
+    <div class="why-grid">
+      <div class="why-left reveal">
+        <div class="eyebrow">Why TechExactly</div>
+        <h2 class="sh">Built for <span class="red">compliance</span> from the first commit</h2>
+        <p class="body-text">Most software firms treat compliance as an afterthought. We bake it in at every layer — so your audit trail is never an emergency retrofit.</p>
+        <div class="why-info-card">
+          <div class="why-icon-box">
+            <svg viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="2" width="6" height="6" rx="1.5" fill="#B4E9FF"/><rect x="10" y="2" width="6" height="6" rx="1.5" fill="#B4E9FF" opacity="0.5"/><rect x="2" y="10" width="6" height="6" rx="1.5" fill="#B4E9FF" opacity="0.5"/><rect x="10" y="10" width="6" height="6" rx="1.5" fill="#B4E9FF" opacity="0.3"/></svg>
+          </div>
+          <div class="why-card-text">
+            <strong>Code AND compliance docs</strong>
+            <span>We write the SRS, SADD, risk management files, and test protocols alongside every sprint — not at the end.</span>
+          </div>
+        </div>
+      </div>
+      <div class="why-reasons">
+        <div class="reason-row reveal">
+          <div class="reason-num">01</div>
+          <div>
+            <div class="reason-title">IEC 62304 from Day 1</div>
+            <div class="reason-desc">Every project starts with a Software Development Plan. We classify software safety, qualify tools, and maintain traceability from requirements to test.</div>
+          </div>
+        </div>
+        <div class="reason-row reveal">
+          <div class="reason-num">02</div>
+          <div>
+            <div class="reason-title">Regulatory Submission Support</div>
+            <div class="reason-desc">We've supported FDA 510(k) and CE technical file submissions. Our documentation is structured for reviewers, not just developers.</div>
+          </div>
+        </div>
+        <div class="reason-row reveal">
+          <div class="reason-num">03</div>
+          <div>
+            <div class="reason-title">SaMD and SiMD Expertise</div>
+            <div class="reason-desc">We understand the distinction between software as a medical device and software in a medical device — and how the regulatory pathway differs for each.</div>
+          </div>
+        </div>
+        <div class="reason-row reveal">
+          <div class="reason-num">04</div>
+          <div>
+            <div class="reason-title">Cross-Functional Regulated Team</div>
+            <div class="reason-desc">Developers, QA engineers, and regulatory specialists work together in every sprint — no handoffs, no gaps.</div>
+          </div>
+        </div>
+        <div class="reason-row reveal">
+          <div class="reason-num">05</div>
+          <div>
+            <div class="reason-title">Full Code Ownership and Auditability</div>
+            <div class="reason-desc">You own all IP. Every commit is traceable, every decision documented. No vendor lock-in, ever.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ SERVICES ═══════════════════ -->
+<section id="services">
+  <div class="container">
+    <div class="section-header reveal">
+      <div class="eyebrow">What we build</div>
+      <h2 class="sh">End-to-end medical software services</h2>
+    </div>
+    <div class="services-outer">
+      <!-- 1 -->
+      <div class="service-card reveal">
+        <div class="service-icon">
+          <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="3" width="14" height="14" rx="3" stroke="currentColor" stroke-width="1.5"/><path d="M7 10h6M10 7v6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </div>
+        <div class="service-title">Medical Device App Development</div>
+        <div class="service-desc">Companion apps for iOS, Android, and cross-platform. HIPAA-aware architecture from the ground up.</div>
+      </div>
+      <!-- 2 -->
+      <div class="service-card reveal">
+        <div class="service-icon">
+          <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10 2L2 7v6l8 5 8-5V7L10 2z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M10 12a2 2 0 100-4 2 2 0 000 4z" stroke="currentColor" stroke-width="1.5"/></svg>
+        </div>
+        <div class="service-title">SaMD Development</div>
+        <div class="service-desc">Standalone software with clinical function, built on its own regulatory pathway with full IEC 62304 lifecycle documentation.</div>
+      </div>
+      <!-- 3 -->
+      <div class="service-card reveal">
+        <div class="service-icon">
+          <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="5" width="16" height="10" rx="2" stroke="currentColor" stroke-width="1.5"/><path d="M6 9h3M6 11h5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="14" cy="10" r="1.5" stroke="currentColor" stroke-width="1.2"/></svg>
+        </div>
+        <div class="service-title">Embedded / SiMD Firmware</div>
+        <div class="service-desc">C, C++, and Rust on ARM and RISC-V. FreeRTOS and Zephyr. Real-time, safety-critical firmware engineered for longevity.</div>
+      </div>
+      <!-- 4 -->
+      <div class="service-card reveal">
+        <div class="service-icon">
+          <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 10h12M10 4l6 6-6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="4" cy="10" r="1.5" fill="currentColor"/></svg>
+        </div>
+        <div class="service-title">EHR Integration & HL7 FHIR</div>
+        <div class="service-desc">API development for Epic, Cerner, and others. FHIR R4 implementation with HIPAA-compliant data handling.</div>
+      </div>
+      <!-- 5 -->
+      <div class="service-card reveal">
+        <div class="service-icon">
+          <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="10" cy="10" r="7" stroke="currentColor" stroke-width="1.5"/><path d="M7 10.5l1.5 1.5 3.5-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div class="service-title">AI/ML Diagnostics</div>
+        <div class="service-desc">Medical imaging and biosignal analysis. Trained against FDA AI/ML framework guidance with full explainability documentation.</div>
+      </div>
+      <!-- 6 -->
+      <div class="service-card reveal">
+        <div class="service-icon">
+          <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5 10a5 5 0 0110 0" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="10" cy="14" r="2.5" stroke="currentColor" stroke-width="1.5"/><path d="M10 11.5v-2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </div>
+        <div class="service-title">Wearable & BLE Development</div>
+        <div class="service-desc">Real-time biometric streaming from wearables to cloud. BLE protocol stacks, sensor fusion, and power-optimized firmware.</div>
+      </div>
+      <!-- 7 -->
+      <div class="service-card reveal">
+        <div class="service-icon">
+          <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10 3l6 3v4c0 3.31-2.69 5.86-6 7-3.31-1.14-6-3.69-6-7V6l6-3z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M7.5 10l1.5 1.5 3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div class="service-title">Medical Device Cybersecurity</div>
+        <div class="service-desc">SBOM generation, OWASP compliance, pen testing pipelines. Aligned to FDA 2023 cybersecurity guidance for premarket submissions.</div>
+      </div>
+      <!-- 8 -->
+      <div class="service-card reveal">
+        <div class="service-icon">
+          <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 7h14M3 13h14M7 3v14M13 3v14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </div>
+        <div class="service-title">HIPAA-Compliant Cloud</div>
+        <div class="service-desc">AWS GovCloud, Azure Health Data Services, and GCP with HIPAA BAA. Infrastructure-as-code with security controls baked in.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ RESULTS ═══════════════════ -->
+<section id="results">
+  <div class="results-dot-grid"></div>
+  <div class="results-glow"></div>
+  <div class="container">
+    <div style="text-align:center; margin-bottom: 48px;">
+      <div class="eyebrow reveal" style="justify-content:center; color: var(--diamond);">
+        <span style="background: var(--diamond); display:block; width:16px; height:2px;"></span>
+        Proven results
+      </div>
+      <h2 class="sh reveal" style="color: var(--white);">Numbers our clients report</h2>
+    </div>
+    <div class="results-container reveal">
+      <div class="result-cell">
+        <div class="result-num">38<span class="rsuf">%</span></div>
+        <div class="result-label">Average cost savings vs. in-house regulated teams</div>
+      </div>
+      <div class="result-cell">
+        <div class="result-num">50<span class="rsuf">M+</span></div>
+        <div class="result-label">End users reached through our client products</div>
+      </div>
+      <div class="result-cell">
+        <div class="result-num">39<span class="rsuf">%</span></div>
+        <div class="result-label">Faster time-to-submission with our process</div>
+      </div>
+      <div class="result-cell">
+        <div class="result-num">80<span class="rsuf">%</span></div>
+        <div class="result-label">Of new clients come from referrals</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ TECH STACK ═══════════════════ -->
+<section id="stack">
+  <div class="stack-dot-grid"></div>
+  <div class="stack-glow"></div>
+  <div class="container" style="position:relative;z-index:1;">
+    <div class="reveal">
+      <div class="eyebrow" style="color:var(--diamond);">
+        <span style="background:var(--diamond); display:block; width:16px; height:2px;"></span>
+        Technology
+      </div>
+      <h2 class="sh" style="color:var(--white);">Our full-stack capability</h2>
+    </div>
+    <div class="stack-outer reveal">
+      <div class="stack-cell"><div class="stack-cat">Embedded / Firmware</div><div class="stack-name">C / C++ / Rust</div><div class="stack-vals">ARM, RISC-V, FreeRTOS, Zephyr</div></div>
+      <div class="stack-cell"><div class="stack-cat">Mobile</div><div class="stack-name">Swift / Kotlin / RN</div><div class="stack-vals">iOS, Android, React Native, Flutter</div></div>
+      <div class="stack-cell"><div class="stack-cat">Backend</div><div class="stack-name">Python / Node / Java</div><div class="stack-vals">Django, FastAPI, Spring Boot, NestJS</div></div>
+      <div class="stack-cell"><div class="stack-cat">Frontend</div><div class="stack-name">React / Next / TS</div><div class="stack-vals">TypeScript, Next.js, Tailwind CSS</div></div>
+      <div class="stack-cell"><div class="stack-cat">Database</div><div class="stack-name">PostgreSQL / Mongo</div><div class="stack-vals">TimescaleDB, InfluxDB, Redis</div></div>
+      <div class="stack-cell"><div class="stack-cat">Cloud</div><div class="stack-name">AWS / Azure / GCP</div><div class="stack-vals">AWS GovCloud, Azure Health, HIPAA BAA</div></div>
+      <div class="stack-cell"><div class="stack-cat">AI / ML</div><div class="stack-name">TensorFlow / PyTorch</div><div class="stack-vals">ONNX, scikit-learn, Hugging Face</div></div>
+      <div class="stack-cell"><div class="stack-cat">Device Connectivity</div><div class="stack-name">BLE / MQTT / FHIR</div><div class="stack-vals">HL7 FHIR R4, DICOM, ANT+</div></div>
+      <div class="stack-cell"><div class="stack-cat">CI/CD & DevOps</div><div class="stack-name">GitHub Actions / Jenkins</div><div class="stack-vals">SonarQube, Snyk, Docker, Terraform</div></div>
+      <div class="stack-cell"><div class="stack-cat">Security</div><div class="stack-name">Vault / KMS / OWASP</div><div class="stack-vals">Syft, Grype, SBOM, pen testing pipeline</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ PROCESS ═══════════════════ -->
+<section id="process">
+  <div class="container">
+    <div class="section-header reveal">
+      <div class="eyebrow">How we work</div>
+      <h2 class="sh">IEC 62304-aligned development process</h2>
+    </div>
+    <div class="process-steps">
+
+      <div class="process-step reveal">
+        <div class="step-left">
+          <div class="step-num">01</div>
+          <div class="iec-tag">IEC §5.1</div>
+        </div>
+        <div>
+          <div class="step-title">Software Development Planning</div>
+          <div class="step-desc">We establish the development plan before a single line of code is written. Safety classification, tool qualification, and roles are locked before kickoff.</div>
+          <div class="deliverable-pills">
+            <span class="dpill">SDP</span>
+            <span class="dpill">Safety Classification</span>
+            <span class="dpill">Tool Qualification</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="process-step reveal">
+        <div class="step-left">
+          <div class="step-num">02</div>
+          <div class="iec-tag">IEC §5.2</div>
+        </div>
+        <div>
+          <div class="step-title">Requirements Analysis</div>
+          <div class="step-desc">Stakeholder and system requirements translated into a traceable Software Requirements Specification with usability engineering inputs.</div>
+          <div class="deliverable-pills">
+            <span class="dpill">SRS</span>
+            <span class="dpill">Usability Inputs</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="process-step reveal">
+        <div class="step-left">
+          <div class="step-num">03</div>
+          <div class="iec-tag">IEC §5.3</div>
+        </div>
+        <div>
+          <div class="step-title">Architectural Design</div>
+          <div class="step-desc">System architecture designed with safety and security in mind. SOUP items identified and documented with known anomalies and required functionality.</div>
+          <div class="deliverable-pills">
+            <span class="dpill">SADD</span>
+            <span class="dpill">SOUP List</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="process-step reveal">
+        <div class="step-left">
+          <div class="step-num">04</div>
+          <div class="iec-tag">IEC §5.4–5.5</div>
+        </div>
+        <div>
+          <div class="step-title">Detailed Design & Implementation</div>
+          <div class="step-desc">Fully documented detailed design followed by implementation with peer-reviewed, standards-conformant code. Unit tests written and executed per plan.</div>
+          <div class="deliverable-pills">
+            <span class="dpill">Source Code</span>
+            <span class="dpill">Unit Test Results</span>
+            <span class="dpill">Code Review Records</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="process-step reveal">
+        <div class="step-left">
+          <div class="step-num">05</div>
+          <div class="iec-tag">ISO 14971</div>
+        </div>
+        <div>
+          <div class="step-title">Risk Management</div>
+          <div class="step-desc">Hazard analysis, risk estimation, and control measures documented throughout the lifecycle — not added at the end. Residual risk evaluated per acceptability criteria.</div>
+          <div class="deliverable-pills">
+            <span class="dpill">Risk Management File (RMF)</span>
+            <span class="dpill">Hazard Analysis</span>
+            <span class="dpill">Risk Controls</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="process-step reveal">
+        <div class="step-left">
+          <div class="step-num">06</div>
+          <div class="iec-tag">IEC §5.6–5.7</div>
+        </div>
+        <div>
+          <div class="step-title">Verification & Validation</div>
+          <div class="step-desc">Integration and system testing executed against approved protocols. Requirements traceability matrix closed. Anomalies resolved or risk-accepted per process.</div>
+          <div class="deliverable-pills">
+            <span class="dpill">Integration Test Protocols & Reports</span>
+            <span class="dpill">System Test Protocols & Reports</span>
+            <span class="dpill">RTM</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="process-step reveal">
+        <div class="step-left">
+          <div class="step-num">07</div>
+          <div class="iec-tag">IEC §5.8</div>
+        </div>
+        <div>
+          <div class="step-title">Configuration Management & Release</div>
+          <div class="step-desc">Release baseline locked with full SBOM. All configuration items under version control with immutable release records and cybersecurity documentation.</div>
+          <div class="deliverable-pills">
+            <span class="dpill">SBOM</span>
+            <span class="dpill">Configuration Management Plan</span>
+            <span class="dpill">Release Records</span>
+            <span class="dpill">Cybersecurity Docs</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="process-step reveal">
+        <div class="step-left">
+          <div class="step-num">08</div>
+          <div class="iec-tag">IEC §6</div>
+        </div>
+        <div>
+          <div class="step-title">Post-Market Maintenance</div>
+          <div class="step-desc">Ongoing monitoring, problem resolution, and change management per your Software Maintenance Plan. We stay engaged so you're always compliant post-launch.</div>
+          <div class="deliverable-pills">
+            <span class="dpill">Software Maintenance Plan</span>
+            <span class="dpill">Problem Resolution Records</span>
+            <span class="dpill">Change Requests</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ DELIVERABLES ═══════════════════ -->
+<section id="deliverables">
+  <div class="deliv-blob"></div>
+  <div class="container">
+    <div class="section-header reveal">
+      <div class="eyebrow">What you receive</div>
+      <h2 class="sh">Every deliverable, submission-ready</h2>
+    </div>
+    <div class="deliv-grid">
+
+      <div class="deliv-card reveal">
+        <div class="deliv-icon">
+          <svg viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5 3h8l4 4v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4a1 1 0 011-1z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M13 3v5h4M8 12h6M8 15h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </div>
+        <div class="deliv-title">Planning & Requirements</div>
+        <ul class="deliv-list">
+          <li>Software Development Plan (SDP)</li>
+          <li>Software Requirements Specification (SRS)</li>
+          <li>Usability Engineering File inputs</li>
+          <li>Tool Qualification Records</li>
+          <li>Safety Classification Rationale</li>
+        </ul>
+      </div>
+
+      <div class="deliv-card reveal">
+        <div class="deliv-icon">
+          <svg viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="3" width="16" height="16" rx="3" stroke="currentColor" stroke-width="1.5"/><path d="M7 11l3 3 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div class="deliv-title">Design & Architecture</div>
+        <ul class="deliv-list">
+          <li>Software Architecture Design Document (SADD)</li>
+          <li>Detailed Design Documents</li>
+          <li>SOUP List with anomaly records</li>
+          <li>Interface Control Documents</li>
+          <li>Cybersecurity Architecture Review</li>
+        </ul>
+      </div>
+
+      <div class="deliv-card reveal">
+        <div class="deliv-icon">
+          <svg viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M11 3L3 7v5c0 4.42 3.47 8.56 8 9.56C16.53 20.56 20 16.42 20 12V7l-9-4z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+        </div>
+        <div class="deliv-title">Risk Management</div>
+        <ul class="deliv-list">
+          <li>Risk Management Plan & Report</li>
+          <li>Hazard Analysis (FMEA / FTA)</li>
+          <li>Risk Controls & Residual Risk Evaluation</li>
+          <li>Risk Management File (RMF)</li>
+          <li>Post-market risk monitoring plan</li>
+        </ul>
+      </div>
+
+      <div class="deliv-card reveal">
+        <div class="deliv-icon">
+          <svg viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 6h14M4 11h10M4 16h7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="17" cy="15" r="3.5" stroke="currentColor" stroke-width="1.5"/><path d="M19.5 17.5l2 2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </div>
+        <div class="deliv-title">Verification & Validation</div>
+        <ul class="deliv-list">
+          <li>Unit & Integration Test Protocols + Reports</li>
+          <li>System Test Protocols + Reports</li>
+          <li>Requirements Traceability Matrix (RTM)</li>
+          <li>Code Review Records</li>
+          <li>Anomaly / Problem Resolution Records</li>
+        </ul>
+      </div>
+
+      <div class="deliv-card reveal">
+        <div class="deliv-icon">
+          <svg viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="5" width="16" height="13" rx="2" stroke="currentColor" stroke-width="1.5"/><path d="M8 5V4a1 1 0 011-1h4a1 1 0 011 1v1" stroke="currentColor" stroke-width="1.5"/><path d="M8 11h6M8 14h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </div>
+        <div class="deliv-title">Release & Configuration</div>
+        <ul class="deliv-list">
+          <li>Software Bill of Materials (SBOM)</li>
+          <li>Configuration Management Plan</li>
+          <li>Release Records & Change History</li>
+          <li>Cybersecurity Documentation package</li>
+          <li>Version-controlled source code handover</li>
+        </ul>
+      </div>
+
+      <div class="deliv-card reveal">
+        <div class="deliv-icon">
+          <svg viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="11" cy="11" r="8" stroke="currentColor" stroke-width="1.5"/><path d="M11 7v4l3 2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div class="deliv-title">Post-Market Support</div>
+        <ul class="deliv-list">
+          <li>Software Maintenance Plan</li>
+          <li>Problem Resolution File</li>
+          <li>Change Request & Impact Assessment records</li>
+          <li>Post-market surveillance inputs</li>
+          <li>Ongoing regulatory update advisory</li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ FAQ ═══════════════════ -->
+<section id="faq">
+  <div class="container">
+    <div class="faq-grid">
+      <div class="faq-left reveal">
+        <div class="eyebrow">FAQ</div>
+        <h2 class="sh">Common questions</h2>
+        <p class="body-text">Still unsure? Here are the questions we hear most often from medical device teams exploring a partnership.</p>
+        <div class="faq-cta-card">
+          <h4>Ready to talk?</h4>
+          <p>Book a free 30-minute call. We'll review your device, classify your software safety class, and map out a realistic path to submission.</p>
+          <a href="#cta-band" class="faq-cta-btn">
+            Schedule a Call
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2.5 7h9M8 4l3.5 3L8 10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
+        </div>
+      </div>
+      <div class="faq-items reveal">
+
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">
+            <span class="faq-q-text">Do you work with early-stage startups or only established companies?</span>
+            <span class="faq-icon"><svg viewBox="0 0 12 12" fill="none"><path d="M6 2v8M2 6h8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span>
+          </button>
+          <div class="faq-a">We work across the spectrum — from pre-seed startups with an idea and a regulatory consultant, to established OEMs adding software capabilities. Our process scales to your stage. For early-stage teams, we often start with a Regulatory Readiness Sprint before committing to a full development engagement.</div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">
+            <span class="faq-q-text">What is your experience with FDA submissions specifically?</span>
+            <span class="faq-icon"><svg viewBox="0 0 12 12" fill="none"><path d="M6 2v8M2 6h8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span>
+          </button>
+          <div class="faq-a">We have supported 510(k) premarket notifications as well as De Novo requests. We prepare the Software Documentation section of submissions — including the Software Description Document, level of concern rationale, and cybersecurity documentation — aligned to the latest FDA guidance documents.</div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">
+            <span class="faq-q-text">Can you take over a project that is already in development?</span>
+            <span class="faq-icon"><svg viewBox="0 0 12 12" fill="none"><path d="M6 2v8M2 6h8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span>
+          </button>
+          <div class="faq-a">Yes. We perform a Compliance Gap Assessment first — reviewing existing code, documentation, and test records against IEC 62304 requirements. We then produce a remediation plan and work through it systematically. This is one of our most common engagement types.</div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">
+            <span class="faq-q-text">Who owns the code and documentation we produce together?</span>
+            <span class="faq-icon"><svg viewBox="0 0 12 12" fill="none"><path d="M6 2v8M2 6h8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span>
+          </button>
+          <div class="faq-a">You do — 100%. All intellectual property, source code, documentation, and regulatory deliverables are assigned to you at project close. We sign an IP assignment agreement at the start of every engagement, alongside the NDA.</div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">
+            <span class="faq-q-text">How do you handle communication across time zones?</span>
+            <span class="faq-icon"><svg viewBox="0 0 12 12" fill="none"><path d="M6 2v8M2 6h8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span>
+          </button>
+          <div class="faq-a">Our teams are bilingual and distributed to provide meaningful overlap with both North American and European working hours. You get a dedicated project lead who is your single point of contact, plus access to our async communication stack. Weekly video syncs are standard; we adapt to your schedule.</div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">
+            <span class="faq-q-text">What does a typical engagement cost and how long does it take?</span>
+            <span class="faq-icon"><svg viewBox="0 0 12 12" fill="none"><path d="M6 2v8M2 6h8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span>
+          </button>
+          <div class="faq-a">Scope varies significantly by device class and software safety classification. A Class B SaMD MVP with full documentation typically runs 4–8 months. Class C projects with submission support are naturally longer. We provide a detailed SOW with fixed-price milestones after our initial discovery call — no open-ended retainers.</div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ CTA BAND ═══════════════════ -->
+<section id="cta-band">
+  <div class="cta-band-bg"></div>
+  <div class="cta-orb"></div>
+  <div class="container cta-band-inner">
+    <div class="eyebrow reveal">Let's build</div>
+    <h2 class="sh reveal">Ready to ship compliant medical software?</h2>
+    <p class="body-text reveal">Book a free 30-minute discovery call. We'll review your device classification, walk through your regulatory timeline, and tell you exactly what we'd do differently.</p>
+    <div class="cta-band-btns reveal">
+      <a href="mailto:hello@techexactly.com" class="btn-primary">
+        Schedule a Call
+        <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M3 7.5h9M9 4.5l3 3-3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+      <a href="mailto:hello@techexactly.com" class="btn-ghost">Send us a brief</a>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ FOOTER ═══════════════════ -->
+<footer>
+  <div class="container">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <div class="wordmark">Tech<span style="color:var(--red)">Exactly</span></div>
+        <p>Medical device software development built for regulatory compliance — from first commit to final submission.</p>
+      </div>
+      <div class="footer-col">
+        <h5>Services</h5>
+        <ul>
+          <li><a href="#services">Medical Device Apps</a></li>
+          <li><a href="#services">SaMD Development</a></li>
+          <li><a href="#services">Embedded Firmware</a></li>
+          <li><a href="#services">AI/ML Diagnostics</a></li>
+          <li><a href="#services">Cybersecurity</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>Standards</h5>
+        <ul>
+          <li><a href="#">IEC 62304</a></li>
+          <li><a href="#">ISO 14971</a></li>
+          <li><a href="#">ISO 13485</a></li>
+          <li><a href="#">FDA 510(k)</a></li>
+          <li><a href="#">CE / MDR</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>Company</h5>
+        <ul>
+          <li><a href="#why">Why Us</a></li>
+          <li><a href="#process">Process</a></li>
+          <li><a href="#deliverables">Deliverables</a></li>
+          <li><a href="#faq">FAQ</a></li>
+          <li><a href="mailto:hello@techexactly.com">Contact</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2025 TechExactly. All rights reserved.</span>
+      <div style="display:flex;gap:20px;">
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms of Service</a>
+        <a href="#">NDA Request</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- ═══════════════════ JAVASCRIPT ═══════════════════ -->
+<script>
+// Nav scroll behavior
+const nav = document.getElementById('nav');
+window.addEventListener('scroll', () => {
+  if (window.scrollY > 40) {
+    nav.classList.add('scrolled');
+  } else {
+    nav.classList.remove('scrolled');
+  }
+});
+
+// Scroll reveal with staggered siblings
+const revealEls = document.querySelectorAll('.reveal');
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      // stagger siblings
+      const parent = entry.target.parentElement;
+      const siblings = [...parent.querySelectorAll('.reveal')];
+      const idx = siblings.indexOf(entry.target);
+      setTimeout(() => {
+        entry.target.classList.add('visible');
+      }, idx * 80);
+      observer.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+revealEls.forEach(el => observer.observe(el));
+
+// FAQ accordion
+function toggleFaq(btn) {
+  const item = btn.closest('.faq-item');
+  const isOpen = item.classList.contains('open');
+  // close all
+  document.querySelectorAll('.faq-item.open').forEach(i => i.classList.remove('open'));
+  if (!isOpen) item.classList.add('open');
+}
+</script>
+</body>
+</html>
